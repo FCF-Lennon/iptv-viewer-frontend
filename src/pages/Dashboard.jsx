@@ -114,9 +114,14 @@ export default function Dashboard() {
         </div>
         <div className="scroll-container">
           {channels.map(channel => (
-            <div key={channel.stream_id} className="card-channel" onClick={() => handlePlayLive(channel.stream_id)}>
+            <div key={channel.id} className="card-channel" onClick={() => handlePlayLive(channel.id)}>
               <div className="card-img-wrapper">
-                <img src={channel.stream_icon || 'https://placehold.co/400x225/111/222?text=No+Image'} alt={channel.name} loading="lazy" />
+                <img 
+                  src={channel.poster || 'https://placehold.co/400x225/111/222?text=Sin+Imagen'} 
+                  alt={channel.title} 
+                  loading="lazy" 
+                  onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x225/111/222?text=Sin+Imagen'; }}
+                />
                 <div className="play-overlay">
                   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -125,18 +130,12 @@ export default function Dashboard() {
               </div>
               <div className="card-epg-info">
                 <div className="channel-header">
-                  <span className="channel-name">{channel.name}</span>
+                  <span className="channel-name">{channel.title}</span>
                 </div>
-                {channel.epg && channel.epg.title ? (
-                   <>
-                     <h3 className="program-title">{channel.epg.title}</h3>
-                     <div className="epg-progress-bg">
-                       <div className="epg-progress-fill" style={{ width: `${channel.epg.progress}%` }}></div>
-                     </div>
-                   </>
-                ) : (
-                   <h3 className="program-title" style={{ color: '#71717a' }}>Sin información EPG</h3>
-                )}
+                {/* Por ahora no tenemos EPG en la API, mostramos la categoría */}
+                <h3 className="program-title" style={{ color: '#71717a', fontSize: '0.9rem' }}>
+                  {channel.category || 'TV en Vivo'}
+                </h3>
               </div>
             </div>
           ))}
@@ -151,9 +150,14 @@ export default function Dashboard() {
         </div>
         <div className="scroll-container">
           {movies.map(movie => (
-            <div key={movie.stream_id} className="card-vod" onClick={() => handlePlayMovie(movie.stream_id)}>
+            <div key={movie.id} className="card-vod" onClick={() => handlePlayMovie(movie.id)}>
               <div className="card-img-wrapper">
-                <img src={movie.stream_icon || 'https://placehold.co/300x450/111/222?text=No+Poster'} alt={movie.name} loading="lazy" />
+                <img 
+                  src={movie.poster || 'https://placehold.co/300x450/111/222?text=Sin+Poster'} 
+                  alt={movie.title} 
+                  loading="lazy" 
+                  onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x450/111/222?text=Sin+Poster'; }}
+                />
                 <div className="play-overlay">
                   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -161,8 +165,8 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="card-info">
-                <h3>{movie.name}</h3>
-                <span className="movie-category">{movie.category_id}</span>
+                <h3>{movie.title}</h3>
+                <span className="movie-category">{movie.category}</span>
               </div>
             </div>
           ))}
