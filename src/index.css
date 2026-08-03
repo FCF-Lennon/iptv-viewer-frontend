@@ -59,15 +59,64 @@ a:hover {
 button {
   cursor: pointer;
   border: none;
-  background: var(--primary);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
-button:hover {
+.btn-primary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #030305;
+  box-shadow: 0 4px 15px rgba(30, 227, 125, 0.3);
+}
+
+.btn-primary:hover {
   background: var(--primary-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(30, 227, 125, 0.5);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Scrollbars globales */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  border: 2px solid var(--bg-dark); /* Fake padding */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }

@@ -130,28 +130,6 @@
   gap: 1rem;
 }
 
-.btn-secondary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
 /* =========================================
    Content Rows (Horizontal Scroll)
    ========================================= */
@@ -195,12 +173,27 @@
   gap: 1.25rem;
   overflow-x: auto;
   padding: 1rem 0 2rem 0;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scroll-behavior: smooth;
 }
 
 .scroll-container::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  height: 8px;
+  display: block; /* Chrome/Safari */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
 /* =========================================
