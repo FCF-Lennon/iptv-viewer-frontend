@@ -67,12 +67,15 @@ button {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.8rem;
+  height: 48px; /* Fuerza altura exacta idéntica */
+  margin: 0; /* Resetea cualquier margen rebelde */
+  padding: 0 1.8rem;
   font-size: 1.05rem;
   font-weight: 700;
   border-radius: 14px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
+  box-sizing: border-box;
 }
 
 .btn-primary {
