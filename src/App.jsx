@@ -20,7 +20,7 @@ function App() {
         </Route>
         
         {/* Reproductor (Sin Layout porque es pantalla completa) */}
-        <Route path="/player/:id" element={<Player />} />
+        <Route path="/player/:type/:id" element={<Player />} />
       </Routes>
     </div>
   )

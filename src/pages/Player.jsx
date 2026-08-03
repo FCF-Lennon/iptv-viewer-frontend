@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import mpegts from 'mpegts.js';
 import { api } from '../services/api';
 import './Player.css';
 
 export default function Player() {
-  const { id } = useParams();
-  const location = useLocation();
+  const { type, id } = useParams();
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const playerRef = useRef(null); // Ref for mpegts instance
@@ -15,8 +14,6 @@ export default function Player() {
   const [error, setError] = useState(null);
   const [channelInfo, setChannelInfo] = useState(null);
   const [showControls, setShowControls] = useState(true);
-  
-  const type = location.pathname.split('/')[2]; 
 
   useEffect(() => {
     setLoading(false);
