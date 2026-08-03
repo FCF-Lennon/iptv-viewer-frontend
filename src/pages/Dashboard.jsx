@@ -79,32 +79,44 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       {/* Banner Principal Dinámico */}
-      <section className="hero-banner">
-        <div className="hero-overlay"></div>
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span className="live-dot"></span> EN VIVO AHORA
+      {movies.length > 0 && (
+        <section className="hero-banner">
+          <div 
+            className="hero-bg-layer"
+            style={{ backgroundImage: `url(${movies[0].poster || 'https://images.unsplash.com/photo-1522778119026-d647f0596c20'})` }}
+          ></div>
+          <div className="hero-overlay"></div>
+          
+          <div className="hero-content">
+            <span className="hero-badge">DESTACADO</span>
+            <h1 className="hero-title">{movies[0].title}</h1>
+            <p className="hero-desc">Disfruta de este título y miles más en nuestra biblioteca de Video on Demand, siempre disponible en máxima calidad.</p>
+            <div className="hero-actions">
+              <button className="btn-primary" onClick={() => handlePlayMovie(movies[0].id)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Ver Ahora
+              </button>
+              <button className="btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                Más Info
+              </button>
+            </div>
           </div>
-          <h1 className="hero-title">UEFA Champions League<br/>Gran Final 2026</h1>
-          <p className="hero-desc">Disfruta del partido más importante del año en calidad 4K HDR. La tensión está al máximo y ambos equipos buscan la gloria eterna.</p>
-          <div className="hero-actions">
-            <button className="btn-primary" onClick={() => handlePlayLive(1)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              Ver Ahora
-            </button>
-            <button className="btn-secondary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              Más info
-            </button>
-          </div>
-        </div>
-      </section>
+
+          <img 
+            src={movies[0].poster} 
+            alt={movies[0].title}
+            className="hero-floating-poster"
+            onError={(e) => e.target.style.display = 'none'}
+          />
+        </section>
+      )}
 
       {/* Fila de Canales en Vivo (EPG Style) */}
       <section className="content-row">
