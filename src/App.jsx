@@ -12,11 +12,16 @@ function App() {
         {/* Rutas públicas */}
         <Route path="/login" element={<Login />} />
         
-        {/* Rutas protegidas */}
         <Route element={<Layout />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
+          {/* Redirigir rutas del navbar temporalmente al dashboard */}
+          <Route path="/live" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/movies" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/series" element={<Navigate to="/dashboard" replace />} />
+          {/* Catch-all para evitar pantalla negra */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
         
         {/* Reproductor (Sin Layout porque es pantalla completa) */}

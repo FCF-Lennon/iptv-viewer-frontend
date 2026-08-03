@@ -95,26 +95,28 @@ export default function Player() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="player-loading">
-        <div className="loading-spinner"></div>
-        <p>Conectando al stream...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="player-container">
+      {loading && (
+        <div className="player-loading" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 50, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-dark)' }}>
+          <div className="loading-spinner"></div>
+          <p style={{ marginTop: '1rem' }}>Conectando al stream...</p>
+        </div>
+      )}
+
       {/* Elemento de Video Real conectado al Backend */}
       <div className="video-layer">
         <video 
           ref={videoRef}
-          src={streamUrl} 
+          src={type === 'live' ? undefined : streamUrl} 
           className="video-element" 
           autoPlay 
           controls={false}
-          onError={(e) => setError("Error al reproducir el formato de video. Es posible que el navegador no soporte este códec nativamente.")}
+          onError={(e) => {
+            if (type !== 'live') {
+              setError("Error al reproducir el formato de video. Es posible que el navegador no soporte este códec nativamente.");
+            }
+          }}
         />
       </div>
 
