@@ -213,7 +213,7 @@
 
 /* EPG Channel Card */
 .card-channel {
-  width: 320px;
+  width: 220px;
 }
 
 /* Movie Card */
@@ -243,7 +243,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain; /* Para que el logo no se corte */
-  padding: 1.5rem; /* Da espacio alrededor del logo para que respire */
+  padding: 1rem; /* Da espacio alrededor del logo para que respire */
   transition: transform 0.3s ease;
 }
 
@@ -278,10 +278,10 @@
 
 /* Channel EPG Info */
 .card-epg-info {
-  padding: 1.25rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .channel-header {
