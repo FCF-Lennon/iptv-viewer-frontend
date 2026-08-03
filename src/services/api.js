@@ -1,12 +1,23 @@
 const BASE_URL = 'http://localhost:8000';
 
+const memoryCache = {};
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
 export const api = {
   /**
-   * Helper for making API requests with automatic JWT injection
+   * Helper for making API requests with automatic JWT injection and optional caching
    */
-  request: async (endpoint, options = {}) => {
+  request: async (endpoint, options = {}, useCache = false) => {
     const token = localStorage.getItem('token');
     
+    // Si se pide caché, revisar si existe y no ha expirado
+    if (useCache && options.method !== 'POST' && options.method !== 'DELETE' && options.method !== 'PATCH') {
+      const cached = memoryCache[endpoint];
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+        return cached.data;
+      }
+    }
+
     const headers = {
       'Content-Type': 'application/json',
       ...options.headers,
@@ -27,6 +38,11 @@ export const api = {
 
       if (!response.ok) {
         throw new Error(data.detail || 'Error en la petición');
+      }
+
+      // Guardar en caché si se solicitó
+      if (useCache) {
+        memoryCache[endpoint] = { data, timestamp: Date.now() };
       }
 
       return data;
@@ -84,11 +100,11 @@ export const api = {
 
   // --- Content ---
   getLiveChannels: (limit = 50) => {
-    return api.request(`/live/?limit=${limit}`);
+    return api.request(`/live/?limit=${limit}`, {}, true);
   },
 
   getMovies: (limit = 50) => {
-    return api.request(`/movies/?limit=${limit}`);
+    return api.request(`/movies/?limit=${limit}`, {}, true);
   },
   
   getStreamUrl: (type, id) => {
