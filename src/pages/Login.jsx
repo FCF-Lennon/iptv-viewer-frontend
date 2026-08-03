@@ -29,48 +29,71 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <div className="login-background"></div>
-      <div className="login-card glass">
-        <div className="login-header">
-          <h1 className="login-title">IPTV<span className="accent">VIEWER</span></h1>
-          <p className="login-subtitle">Inicia sesión para continuar</p>
+      <div className="login-content-wrapper">
+        <div className="login-card">
+          <div className="login-brand">
+            <h1>IPTV<span className="accent">VIEWER</span></h1>
+            <p className="login-subtitle">Inicia sesión para continuar</p>
+          </div>
+
+          {error && (
+            <div className="login-error">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="form-group">
+              <label htmlFor="username">Usuario</label>
+              <div className="input-wrapper">
+                <input 
+                  id="username"
+                  type="text" 
+                  placeholder="Ingresa tu usuario"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  autoComplete="username"
+                />
+              </div>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="password">Contraseña</label>
+              <div className="input-wrapper">
+                <input 
+                  id="password"
+                  type="password" 
+                  placeholder="Ingresa tu contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              className={`btn-primary ${isLoading ? 'loading' : ''}`}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <div className="loading-spinner"></div>
+                  Iniciando...
+                </>
+              ) : (
+                'Iniciar Sesión'
+              )}
+            </button>
+          </form>
         </div>
-
-        {error && <div className="login-error">{error}</div>}
-
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="username">Usuario</label>
-            <input 
-              id="username"
-              type="text" 
-              placeholder="Ingresa tu usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <input 
-              id="password"
-              type="password" 
-              placeholder="Ingresa tu contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            className={`btn-primary ${isLoading ? 'loading' : ''}`}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Iniciando...' : 'Iniciar Sesión'}
-          </button>
-        </form>
       </div>
     </div>
   );
