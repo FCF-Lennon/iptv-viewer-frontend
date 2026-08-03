@@ -1,0 +1,278 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding-bottom: 2rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-loading {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================
+   Hero Banner
+   ========================================= */
+.hero-banner {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 400px;
+  display: flex;
+  align-items: flex-end;
+  padding: 3rem;
+  background: linear-gradient(0deg, rgba(3, 3, 5, 0.9) 0%, rgba(3, 3, 5, 0.4) 50%, rgba(3, 3, 5, 0.1) 100%),
+              url('https://placehold.co/1200x500/111/222') center/cover no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--error);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+.hero-desc {
+  font-size: 1.1rem;
+  color: #e4e4e7;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================
+   Content Rows (Horizontal Scroll)
+   ========================================= */
+.content-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.row-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.row-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.btn-link {
+  background: transparent;
+  color: var(--primary);
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.btn-link:hover {
+  background: transparent;
+  color: var(--primary-hover);
+  text-decoration: underline;
+  transform: none;
+}
+
+.scroll-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* =========================================
+   Cards (Channels & VOD)
+   ========================================= */
+.card-channel, .card-vod {
+  flex: 0 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(24, 24, 27, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-channel {
+  width: 280px;
+}
+
+.card-vod {
+  width: 200px;
+}
+
+.card-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #111;
+}
+
+.card-vod .card-img-wrapper {
+  aspect-ratio: 2/3;
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 227, 125, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.play-overlay svg {
+  color: var(--primary);
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  transform: scale(0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-info {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: var(--error);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--error);
+  animation: pulse-live 2s infinite;
+}
+
+@keyframes pulse-live {
+  0% { opacity: 1; box-shadow: 0 0 8px var(--error); }
+  50% { opacity: 0.4; box-shadow: 0 0 2px var(--error); }
+  100% { opacity: 1; box-shadow: 0 0 8px var(--error); }
+}
+
+/* Hover Effects */
+.card-channel:hover, .card-vod:hover {
+  transform: translateY(-5px);
+  border-color: rgba(30, 227, 125, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(30, 227, 125, 0.1);
+}
+
+.card-channel:hover .card-img-wrapper img, 
+.card-vod:hover .card-img-wrapper img {
+  transform: scale(1.05);
+}
+
+.card-channel:hover .play-overlay,
+.card-vod:hover .play-overlay {
+  opacity: 1;
+}
+
+.card-channel:hover .play-overlay svg,
+.card-vod:hover .play-overlay svg {
+  transform: scale(1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-banner {
+    min-height: 300px;
+    padding: 2rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .card-channel {
+    width: 220px;
+  }
+  
+  .card-vod {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding-bottom: 5rem; /* Space for fixed bottom navbar */
+  }
+  
+  .hero-banner {
+    border-radius: 0;
+    margin: -2rem -2rem 0 -2rem; /* Negar padding del layout */
+    padding: 2rem 1.5rem;
+  }
+  
+  .content-row {
+    margin: 0 -1rem;
+  }
+  
+  .row-header {
+    padding: 0 1rem;
+  }
+  
+  .scroll-container {
+    padding: 0 1rem 1rem 1rem;
+  }
+}

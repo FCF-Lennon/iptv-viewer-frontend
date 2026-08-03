@@ -1,0 +1,221 @@
+.player-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.player-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #030305;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--primary);
+  z-index: 1001;
+}
+
+.video-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.video-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+/* =========================================
+   UI Overlays
+   ========================================= */
+.player-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none; /* Let clicks pass through to video */
+  transition: opacity 0.4s ease;
+  background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.8) 100%);
+}
+
+.player-ui.visible {
+  opacity: 1;
+}
+
+.player-ui.hidden {
+  opacity: 0;
+}
+
+/* Permitir clics en los elementos de la UI */
+.player-top-bar, .player-bottom-info, .player-controls {
+  pointer-events: auto;
+}
+
+/* Top Bar */
+.player-top-bar {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  background: rgba(15, 15, 20, 0.6);
+}
+
+.btn-back {
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary);
+}
+
+.channel-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.channel-meta h2 {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 700;
+  color: #fff;
+}
+
+.live-badge {
+  background: var(--error);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  animation: pulse-live 2s infinite;
+}
+
+/* Bottom Info */
+.player-bottom-info {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: rgba(15, 15, 20, 0.7);
+  width: 400px;
+  max-width: 90vw;
+}
+
+.player-bottom-info h3 {
+  font-size: 1.5rem;
+  margin: 0 0 0.25rem 0;
+  color: #fff;
+  font-weight: 700;
+}
+
+.player-bottom-info p {
+  color: #a1a1aa;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 3px;
+  box-shadow: 0 0 10px var(--primary);
+}
+
+/* Controls */
+.player-controls {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 16px;
+  background: rgba(15, 15, 20, 0.7);
+}
+
+.control-btn {
+  background: transparent;
+  color: #fff;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .player-top-bar {
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    justify-content: space-between;
+  }
+  
+  .player-bottom-info {
+    bottom: 6rem;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+  }
+  
+  .player-controls {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+}
