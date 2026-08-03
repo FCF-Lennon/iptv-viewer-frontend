@@ -131,6 +131,33 @@
   gap: 1rem;
 }
 
+.hero-dots {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.hero-dot.active {
+  background: var(--primary);
+  width: 24px;
+  border-radius: 5px;
+}
+
+.fade-in-poster {
+  animation: fadeIn 0.5s ease-out;
+}
+
 /* =========================================
    Content Rows (Horizontal Scroll)
    ========================================= */

@@ -6,7 +6,8 @@ import './Dashboard.css';
 export default function Dashboard() {
   const [channels, setChannels] = useState([]);
   const [movies, setMovies] = useState([]);
-  const [heroMovie, setHeroMovie] = useState(null);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [heroMoviesInfo, setHeroMoviesInfo] = useState({});
   const [epgData, setEpgData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +31,7 @@ export default function Dashboard() {
         setMovies(vodData || []);
 
         if (vodData && vodData.length > 0) {
-          loadHeroMovieInfo(vodData[0].id);
+          loadHeroMoviesInfo(vodData.slice(0, 5));
         }
 
         // Load EPG for the first 15 channels
@@ -61,17 +62,27 @@ export default function Dashboard() {
       });
     };
 
-    const loadHeroMovieInfo = async (id) => {
-      try {
-        const info = await api.getMovieInfo(id);
-        setHeroMovie(info);
-      } catch (error) {
-        console.error(`Error loading hero movie info:`, error);
-      }
+    const loadHeroMoviesInfo = async (topMovies) => {
+      topMovies.forEach(async (movie) => {
+        try {
+          const info = await api.getMovieInfo(movie.id);
+          setHeroMoviesInfo(prev => ({...prev, [movie.id]: info}));
+        } catch (error) {
+          console.error(`Error loading hero movie info:`, error);
+        }
+      });
     };
 
     fetchContent();
   }, []);
+
+  useEffect(() => {
+    if (movies.length === 0) return;
+    const interval = setInterval(() => {
+      setHeroIndex((prevIndex) => (prevIndex + 1) % Math.min(movies.length, 5));
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [movies]);
 
   const handlePlayLive = (id) => {
     navigate(`/player/live/${id}`);
@@ -145,20 +156,20 @@ export default function Dashboard() {
         <section className="hero-banner">
           <div 
             className="hero-bg-layer"
-            style={{ backgroundImage: `url(${movies[0].poster || 'https://images.unsplash.com/photo-1522778119026-d647f0596c20'})` }}
+            style={{ backgroundImage: `url(${movies[heroIndex].poster || 'https://images.unsplash.com/photo-1522778119026-d647f0596c20'})` }}
           ></div>
           <div className="hero-overlay"></div>
           
           <div className="hero-content">
             <span className="hero-badge">DESTACADO</span>
-            <h1 className="hero-title">{movies[0].title}</h1>
+            <h1 className="hero-title">{movies[heroIndex].title}</h1>
             <p className="hero-desc">
-              {heroMovie?.description 
-                ? (heroMovie.description.length > 250 ? heroMovie.description.substring(0, 250) + '...' : heroMovie.description)
+              {heroMoviesInfo[movies[heroIndex].id]?.description 
+                ? (heroMoviesInfo[movies[heroIndex].id].description.length > 250 ? heroMoviesInfo[movies[heroIndex].id].description.substring(0, 250) + '...' : heroMoviesInfo[movies[heroIndex].id].description)
                 : 'Cargando sinopsis...'}
             </p>
             <div className="hero-actions">
-              <button className="btn-primary" onClick={() => handlePlayMovie(movies[0].id)}>
+              <button className="btn-primary" onClick={() => handlePlayMovie(movies[heroIndex].id)}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                   <polygon points="5 3 19 12 5 21 5 3"></polygon>
                 </svg>
@@ -173,12 +184,23 @@ export default function Dashboard() {
                 Más Info
               </button>
             </div>
+            
+            <div className="hero-dots">
+              {movies.slice(0, 5).map((m, idx) => (
+                <button 
+                  key={m.id} 
+                  className={`hero-dot ${idx === heroIndex ? 'active' : ''}`}
+                  onClick={() => setHeroIndex(idx)}
+                ></button>
+              ))}
+            </div>
           </div>
 
           <img 
-            src={movies[0].poster} 
-            alt={movies[0].title}
-            className="hero-floating-poster"
+            key={movies[heroIndex].id}
+            src={movies[heroIndex].poster} 
+            alt={movies[heroIndex].title}
+            className="hero-floating-poster fade-in-poster"
             onError={(e) => e.target.style.display = 'none'}
           />
         </section>
