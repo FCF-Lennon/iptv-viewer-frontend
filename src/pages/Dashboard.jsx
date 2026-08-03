@@ -6,6 +6,7 @@ import './Dashboard.css';
 export default function Dashboard() {
   const [channels, setChannels] = useState([]);
   const [movies, setMovies] = useState([]);
+  const [heroMovie, setHeroMovie] = useState(null);
   const [epgData, setEpgData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,6 +28,10 @@ export default function Dashboard() {
         ]);
         setChannels(liveData || []);
         setMovies(vodData || []);
+
+        if (vodData && vodData.length > 0) {
+          loadHeroMovieInfo(vodData[0].id);
+        }
 
         // Load EPG for the first 15 channels
         if (liveData && liveData.length > 0) {
@@ -54,6 +59,15 @@ export default function Dashboard() {
           console.error(`Error loading EPG for ${channel.id}:`, error);
         }
       });
+    };
+
+    const loadHeroMovieInfo = async (id) => {
+      try {
+        const info = await api.getMovieInfo(id);
+        setHeroMovie(info);
+      } catch (error) {
+        console.error(`Error loading hero movie info:`, error);
+      }
     };
 
     fetchContent();
@@ -138,7 +152,11 @@ export default function Dashboard() {
           <div className="hero-content">
             <span className="hero-badge">DESTACADO</span>
             <h1 className="hero-title">{movies[0].title}</h1>
-            <p className="hero-desc">Disfruta de este título y miles más en nuestra biblioteca de Video on Demand, siempre disponible en máxima calidad.</p>
+            <p className="hero-desc">
+              {heroMovie?.description 
+                ? (heroMovie.description.length > 250 ? heroMovie.description.substring(0, 250) + '...' : heroMovie.description)
+                : 'Cargando sinopsis...'}
+            </p>
             <div className="hero-actions">
               <button className="btn-primary" onClick={() => handlePlayMovie(movies[0].id)}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">

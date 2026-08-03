@@ -107,6 +107,10 @@ export const api = {
     return api.request(`/movies/?limit=${limit}`, {}, true);
   },
   
+  getMovieInfo: (id) => {
+    return api.request(`/movies/${id}`, {}, true);
+  },
+  
   getEpg: (streamId, limit = 5) => {
     return api.request(`/live/${streamId}/epg?limit=${limit}`, {}, false); // Not caching EPG because it changes often
   },
