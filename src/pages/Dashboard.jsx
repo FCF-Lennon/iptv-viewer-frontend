@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import './Dashboard.css';
@@ -10,6 +10,10 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [needsSetup, setNeedsSetup] = useState(false);
   const navigate = useNavigate();
+
+  // Refs para el scroll horizontal
+  const liveScrollRef = useRef(null);
+  const moviesScrollRef = useRef(null);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -42,6 +46,31 @@ export default function Dashboard() {
 
   const handlePlayMovie = (id) => {
     navigate(`/player/movie/${id}`);
+  };
+
+  // Funciones para scroll con arrastre de ratón
+  const handleMouseDown = (e, ref) => {
+    if (!ref.current) return;
+    ref.current.isDown = true;
+    ref.current.startX = e.pageX - ref.current.offsetLeft;
+    ref.current.scrollLeftStart = ref.current.scrollLeft;
+    ref.current.style.cursor = 'grabbing';
+    ref.current.style.scrollBehavior = 'auto'; // desactiva smooth para que no haya lag
+  };
+
+  const handleMouseLeaveOrUp = (ref) => {
+    if (!ref.current) return;
+    ref.current.isDown = false;
+    ref.current.style.cursor = 'auto';
+    ref.current.style.scrollBehavior = 'smooth';
+  };
+
+  const handleMouseMove = (e, ref) => {
+    if (!ref.current || !ref.current.isDown) return;
+    e.preventDefault();
+    const x = e.pageX - ref.current.offsetLeft;
+    const walk = (x - ref.current.startX) * 1.5; // Multiplicador de velocidad
+    ref.current.scrollLeft = ref.current.scrollLeftStart - walk;
   };
 
   if (loading) {
@@ -124,7 +153,14 @@ export default function Dashboard() {
           <h2>TV en Vivo</h2>
           <button className="btn-link">Guía Completa</button>
         </div>
-        <div className="scroll-container">
+        <div 
+          className="scroll-container"
+          ref={liveScrollRef}
+          onMouseDown={(e) => handleMouseDown(e, liveScrollRef)}
+          onMouseLeave={() => handleMouseLeaveOrUp(liveScrollRef)}
+          onMouseUp={() => handleMouseLeaveOrUp(liveScrollRef)}
+          onMouseMove={(e) => handleMouseMove(e, liveScrollRef)}
+        >
           {channels.map(channel => (
             <div key={channel.id} className="card-channel" onClick={() => handlePlayLive(channel.id)}>
               <div className="card-img-wrapper">
@@ -160,7 +196,14 @@ export default function Dashboard() {
           <h2>Agregados Recientemente</h2>
           <button className="btn-link">Ver todo el catálogo</button>
         </div>
-        <div className="scroll-container">
+        <div 
+          className="scroll-container"
+          ref={moviesScrollRef}
+          onMouseDown={(e) => handleMouseDown(e, moviesScrollRef)}
+          onMouseLeave={() => handleMouseLeaveOrUp(moviesScrollRef)}
+          onMouseUp={() => handleMouseLeaveOrUp(moviesScrollRef)}
+          onMouseMove={(e) => handleMouseMove(e, moviesScrollRef)}
+        >
           {movies.map(movie => (
             <div key={movie.id} className="card-vod" onClick={() => handlePlayMovie(movie.id)}>
               <div className="card-img-wrapper">

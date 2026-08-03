@@ -79,12 +79,14 @@ button {
   background: var(--primary);
   color: #030305;
   box-shadow: 0 4px 15px rgba(30, 227, 125, 0.3);
+  border: 1px solid transparent; /* Match border size of secondary */
 }
 
 .btn-primary:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(30, 227, 125, 0.5);
+  border-color: transparent;
 }
 
 .btn-secondary {

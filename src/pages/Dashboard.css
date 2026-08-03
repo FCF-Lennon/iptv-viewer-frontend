@@ -24,14 +24,14 @@
    ========================================= */
 .hero-banner {
   position: relative;
-  width: 100%;
+  width: calc(100% + 4rem); /* Compensa el padding de Layout */
   min-height: 550px;
   display: flex;
   align-items: flex-end;
-  padding: 4rem 4rem;
-  border-radius: 24px;
+  padding: 4rem;
+  border-radius: 0;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin: -2rem -2rem 2rem -2rem; /* Sube hacia el navbar y expande horizontalmente */
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
