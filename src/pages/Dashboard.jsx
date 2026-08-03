@@ -164,9 +164,12 @@ export default function Dashboard() {
             <span className="hero-badge">DESTACADO</span>
             <h1 className="hero-title">{movies[heroIndex].title}</h1>
             <p className="hero-desc">
-              {heroMoviesInfo[movies[heroIndex].id]?.description 
-                ? (heroMoviesInfo[movies[heroIndex].id].description.length > 250 ? heroMoviesInfo[movies[heroIndex].id].description.substring(0, 250) + '...' : heroMoviesInfo[movies[heroIndex].id].description)
-                : 'Cargando sinopsis...'}
+              {(() => {
+                const desc = movies[heroIndex].description || heroMoviesInfo[movies[heroIndex].id]?.description;
+                if (desc) return desc.length > 250 ? desc.substring(0, 250) + '...' : desc;
+                if (heroMoviesInfo[movies[heroIndex].id]) return 'Sinopsis no disponible para este título.';
+                return 'Cargando sinopsis...';
+              })()}
             </p>
             <div className="hero-actions">
               <button className="btn-primary" onClick={() => handlePlayMovie(movies[heroIndex].id)}>
