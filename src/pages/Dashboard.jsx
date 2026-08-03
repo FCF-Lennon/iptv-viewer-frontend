@@ -180,9 +180,8 @@ export default function Dashboard() {
                 <div className="channel-header">
                   <span className="channel-name">{channel.title}</span>
                 </div>
-                {/* Por ahora no tenemos EPG en la API, mostramos la categoría */}
                 <h3 className="program-title" style={{ color: '#71717a', fontSize: '0.9rem' }}>
-                  {channel.category || 'TV en Vivo'}
+                  {channel.num ? `Canal ${channel.num}` : 'TV en Vivo'}
                 </h3>
               </div>
             </div>
@@ -221,7 +220,6 @@ export default function Dashboard() {
               </div>
               <div className="card-info">
                 <h3>{movie.title}</h3>
-                <span className="movie-category">{movie.category}</span>
               </div>
             </div>
           ))}
