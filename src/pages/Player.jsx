@@ -22,29 +22,34 @@ export default function Player() {
 
     // Si es TV en Vivo, usamos mpegts para procesar el formato .ts
     if (type === 'live') {
-      if (mpegts.getFeatureList().mseLivePlayback) {
-        playerRef.current = mpegts.createPlayer({
-          type: 'm2ts', // Formato nativo MPEG-TS de IPTV
-          isLive: true,
-          url: streamUrl,
-        });
-        
-        playerRef.current.attachMediaElement(videoRef.current);
-        playerRef.current.load();
-        
-        playerRef.current.on(mpegts.Events.ERROR, (errType, errDetail) => {
-          console.error("MPEGTS Error:", errType, errDetail);
-          setError("Error decodificando el stream. Verifica si está activo.");
-        });
-
-        const playPromise = playerRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.log("Auto-play was prevented", error);
+      try {
+        if (mpegts && mpegts.getFeatureList && mpegts.getFeatureList().mseLivePlayback) {
+          playerRef.current = mpegts.createPlayer({
+            type: 'm2ts', // Formato nativo MPEG-TS de IPTV
+            isLive: true,
+            url: streamUrl,
           });
+          
+          playerRef.current.attachMediaElement(videoRef.current);
+          playerRef.current.load();
+          
+          playerRef.current.on(mpegts.Events.ERROR, (errType, errDetail) => {
+            console.error("MPEGTS Error:", errType, errDetail);
+            setError("Error decodificando el stream. Verifica si está activo.");
+          });
+
+          const playPromise = playerRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => {
+              console.log("Auto-play was prevented", err);
+            });
+          }
+        } else {
+          setError("Tu navegador no soporta MSE o mpegts no cargó correctamente.");
         }
-      } else {
-        setError("Tu navegador no soporta MSE (Media Source Extensions) para reproducir TV.");
+      } catch (err) {
+        console.error("Error inicializando mpegts:", err);
+        setError("Error crítico al iniciar el reproductor de TV: " + err.message);
       }
     }
 

@@ -88,7 +88,7 @@ export default function Dashboard() {
           <h1 className="hero-title">UEFA Champions League<br/>Gran Final 2026</h1>
           <p className="hero-desc">Disfruta del partido más importante del año en calidad 4K HDR. La tensión está al máximo y ambos equipos buscan la gloria eterna.</p>
           <div className="hero-actions">
-            <button className="btn-primary" onClick={() => handlePlay(1)}>
+            <button className="btn-primary" onClick={() => handlePlayLive(1)}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
               </svg>
