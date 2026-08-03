@@ -83,7 +83,7 @@
   color: #e4e4e7;
 }
 
-.btn-logout {
+.btn-icon {
   background: transparent;
   color: #a1a1aa;
   padding: 0.5rem;
@@ -91,12 +91,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .btn-logout:hover {
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
-  transform: translateY(0);
 }
 
 @media (max-width: 768px) {

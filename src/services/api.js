@@ -56,5 +56,43 @@ export const api = {
 
   getProfile: () => {
     return api.request('/auth/me');
+  },
+
+  // --- Xtream Credentials ---
+  getXtreamCredentials: () => {
+    return api.request('/auth/xtream');
+  },
+  
+  addXtreamCredentials: (data) => {
+    return api.request('/auth/xtream', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  activateXtreamCredential: (id) => {
+    return api.request(`/auth/xtream/${id}/activate`, {
+      method: 'PATCH'
+    });
+  },
+
+  deleteXtreamCredential: (id) => {
+    return api.request(`/auth/xtream/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  // --- Content ---
+  getLiveChannels: (limit = 50) => {
+    return api.request(`/live/?limit=${limit}`);
+  },
+
+  getMovies: (limit = 50) => {
+    return api.request(`/movies/?limit=${limit}`);
+  },
+  
+  getStreamUrl: (type, id) => {
+    const token = localStorage.getItem('token');
+    return `${BASE_URL}/stream/${type}/${id}?token=${token}`;
   }
 };

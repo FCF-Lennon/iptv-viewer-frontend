@@ -6,75 +6,71 @@ export default function Dashboard() {
   const [channels, setChannels] = useState([]);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [needsSetup, setNeedsSetup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulando carga de datos EPG (Guía de programación electrónica) y contenido VOD
-    setTimeout(() => {
-      setChannels([
-        { 
-          id: 1, 
-          name: 'Deportes Premium', 
-          logo: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=250&auto=format&fit=crop',
-          currentProgram: 'UEFA Champions League: Final',
-          progress: 65,
-          time: '14:00 - 16:30'
-        },
-        { 
-          id: 2, 
-          name: 'Noticias 24', 
-          logo: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=250&auto=format&fit=crop',
-          currentProgram: 'Edición Central',
-          progress: 80,
-          time: '21:00 - 22:30'
-        },
-        { 
-          id: 3, 
-          name: 'Cine Max', 
-          logo: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=250&auto=format&fit=crop',
-          currentProgram: 'Interstellar',
-          progress: 30,
-          time: '20:00 - 23:00'
-        },
-        { 
-          id: 4, 
-          name: 'Música Hit', 
-          logo: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=250&auto=format&fit=crop',
-          currentProgram: 'Top 50 Global',
-          progress: 15,
-          time: '18:00 - 20:00'
-        },
-        { 
-          id: 5, 
-          name: 'Naturaleza', 
-          logo: 'https://images.unsplash.com/photo-1518182170546-076616fd4aa5?q=80&w=250&auto=format&fit=crop',
-          currentProgram: 'Planeta Tierra II',
-          progress: 45,
-          time: '19:00 - 20:00'
+    const fetchContent = async () => {
+      try {
+        setLoading(true);
+        // Fetch Live and VOD in parallel
+        const [liveData, vodData] = await Promise.all([
+          api.getLiveChannels(15),
+          api.getMovies(15)
+        ]);
+        setChannels(liveData || []);
+        setMovies(vodData || []);
+      } catch (err) {
+        if (err.message && err.message.includes('Credenciales Xtream no configuradas')) {
+          setNeedsSetup(true);
+        } else {
+          setError(err.message || 'Error al cargar contenido');
         }
-      ]);
-      
-      setMovies([
-        { id: 101, title: 'Dune: Part Two', img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300&auto=format&fit=crop', category: 'Ciencia Ficción' },
-        { id: 102, title: 'Oppenheimer', img: 'https://images.unsplash.com/photo-1440407876336-62333a6f010f?q=80&w=300&auto=format&fit=crop', category: 'Drama' },
-        { id: 103, title: 'Barbie', img: 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?q=80&w=300&auto=format&fit=crop', category: 'Comedia' },
-        { id: 104, title: 'Spider-Man', img: 'https://images.unsplash.com/photo-1635805737707-575885ab0820?q=80&w=300&auto=format&fit=crop', category: 'Acción' },
-        { id: 105, title: 'Wonka', img: 'https://images.unsplash.com/photo-1517409241951-64d85a0ca797?q=80&w=300&auto=format&fit=crop', category: 'Fantasía' },
-        { id: 106, title: 'Killers of the Flower Moon', img: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=300&auto=format&fit=crop', category: 'Crimen' }
-      ]);
-      
-      setLoading(false);
-    }, 800);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchContent();
   }, []);
 
-  const handlePlay = (id) => {
-    navigate(`/player/${id}`);
+  const handlePlayLive = (id) => {
+    navigate(`/player/live/${id}`);
+  };
+
+  const handlePlayMovie = (id) => {
+    navigate(`/player/movie/${id}`);
   };
 
   if (loading) {
     return (
       <div className="dashboard-loading">
         <div className="loading-spinner"></div>
+      </div>
+    );
+  }
+
+  if (needsSetup) {
+    return (
+      <div className="dashboard-container" style={{ alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 150px)' }}>
+        <div style={{ textAlign: 'center', padding: '3rem', background: 'rgba(15,15,20,0.8)', borderRadius: '16px', maxWidth: '500px' }}>
+          <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#fff' }}>¡Bienvenido a IPTV Viewer!</h2>
+          <p style={{ color: '#a1a1aa', marginBottom: '2rem', lineHeight: '1.5' }}>Para empezar a ver tu contenido, necesitas configurar las credenciales de tu proveedor Xtream Codes.</p>
+          <button className="btn-primary" onClick={() => navigate('/settings')}>
+            Configurar Xtream Codes
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container" style={{ padding: '2rem' }}>
+        <div style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px' }}>
+          Error: {error}
+        </div>
       </div>
     );
   }
@@ -117,9 +113,9 @@ export default function Dashboard() {
         </div>
         <div className="scroll-container">
           {channels.map(channel => (
-            <div key={channel.id} className="card-channel" onClick={() => handlePlay(channel.id)}>
+            <div key={channel.stream_id} className="card-channel" onClick={() => handlePlayLive(channel.stream_id)}>
               <div className="card-img-wrapper">
-                <img src={channel.logo} alt={channel.name} loading="lazy" />
+                <img src={channel.stream_icon || 'https://placehold.co/400x225/111/222?text=No+Image'} alt={channel.name} loading="lazy" />
                 <div className="play-overlay">
                   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -129,12 +125,17 @@ export default function Dashboard() {
               <div className="card-epg-info">
                 <div className="channel-header">
                   <span className="channel-name">{channel.name}</span>
-                  <span className="channel-time">{channel.time}</span>
                 </div>
-                <h3 className="program-title">{channel.currentProgram}</h3>
-                <div className="epg-progress-bg">
-                  <div className="epg-progress-fill" style={{ width: `${channel.progress}%` }}></div>
-                </div>
+                {channel.epg && channel.epg.title ? (
+                   <>
+                     <h3 className="program-title">{channel.epg.title}</h3>
+                     <div className="epg-progress-bg">
+                       <div className="epg-progress-fill" style={{ width: `${channel.epg.progress}%` }}></div>
+                     </div>
+                   </>
+                ) : (
+                   <h3 className="program-title" style={{ color: '#71717a' }}>Sin información EPG</h3>
+                )}
               </div>
             </div>
           ))}
@@ -149,9 +150,9 @@ export default function Dashboard() {
         </div>
         <div className="scroll-container">
           {movies.map(movie => (
-            <div key={movie.id} className="card-vod" onClick={() => handlePlay(movie.id)}>
+            <div key={movie.stream_id} className="card-vod" onClick={() => handlePlayMovie(movie.stream_id)}>
               <div className="card-img-wrapper">
-                <img src={movie.img} alt={movie.title} loading="lazy" />
+                <img src={movie.stream_icon || 'https://placehold.co/300x450/111/222?text=No+Poster'} alt={movie.name} loading="lazy" />
                 <div className="play-overlay">
                   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -159,8 +160,8 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="card-info">
-                <h3>{movie.title}</h3>
-                <span className="movie-category">{movie.category}</span>
+                <h3>{movie.name}</h3>
+                <span className="movie-category">{movie.category_id}</span>
               </div>
             </div>
           ))}
