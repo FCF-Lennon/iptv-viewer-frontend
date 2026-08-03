@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import mpegts from 'mpegts.js';
 import { api } from '../services/api';
 import './Player.css';
 
@@ -8,20 +9,48 @@ export default function Player() {
   const location = useLocation();
   const navigate = useNavigate();
   const videoRef = useRef(null);
+  const playerRef = useRef(null); // Ref for mpegts instance
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [channelInfo, setChannelInfo] = useState(null);
   const [showControls, setShowControls] = useState(true);
   
-  // Determinar si es 'live', 'movie' o 'series' basándose en la ruta
-  const type = location.pathname.split('/')[2]; // /player/live/123 -> 'live'
+  const type = location.pathname.split('/')[2]; 
 
   useEffect(() => {
-    // Cuando el componente carga, iniciamos la reproducción
     setLoading(false);
+    setError(null);
+    const streamUrl = api.getStreamUrl(type, id);
 
-    // Ocultar controles automáticamente después de 3 segundos de inactividad del mouse
+    // Si es TV en Vivo, usamos mpegts para procesar el formato .ts
+    if (type === 'live') {
+      if (mpegts.getFeatureList().mseLivePlayback) {
+        playerRef.current = mpegts.createPlayer({
+          type: 'm2ts', // Formato nativo MPEG-TS de IPTV
+          isLive: true,
+          url: streamUrl,
+        });
+        
+        playerRef.current.attachMediaElement(videoRef.current);
+        playerRef.current.load();
+        
+        playerRef.current.on(mpegts.Events.ERROR, (errType, errDetail) => {
+          console.error("MPEGTS Error:", errType, errDetail);
+          setError("Error decodificando el stream. Verifica si está activo.");
+        });
+
+        const playPromise = playerRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log("Auto-play was prevented", error);
+          });
+        }
+      } else {
+        setError("Tu navegador no soporta MSE (Media Source Extensions) para reproducir TV.");
+      }
+    }
+
     let timeout;
     const resetControlsTimeout = () => {
       setShowControls(true);
@@ -35,10 +64,13 @@ export default function Player() {
     return () => {
       window.removeEventListener('mousemove', resetControlsTimeout);
       clearTimeout(timeout);
+      if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
     };
   }, [id, type]);
 
-  // Construir la URL del proxy del backend
   const streamUrl = api.getStreamUrl(type, id);
 
   const togglePlay = () => {
