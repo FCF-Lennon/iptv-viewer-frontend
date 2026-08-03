@@ -6,6 +6,7 @@ import './Dashboard.css';
 export default function Dashboard() {
   const [channels, setChannels] = useState([]);
   const [movies, setMovies] = useState([]);
+  const [epgData, setEpgData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [needsSetup, setNeedsSetup] = useState(false);
@@ -26,6 +27,11 @@ export default function Dashboard() {
         ]);
         setChannels(liveData || []);
         setMovies(vodData || []);
+
+        // Load EPG for the first 15 channels
+        if (liveData && liveData.length > 0) {
+          loadEpgForChannels(liveData);
+        }
       } catch (err) {
         if (err.message && err.message.includes('Credenciales Xtream no configuradas')) {
           setNeedsSetup(true);
@@ -37,6 +43,19 @@ export default function Dashboard() {
       }
     };
     
+    const loadEpgForChannels = async (channelsToLoad) => {
+      channelsToLoad.forEach(async (channel) => {
+        try {
+          const epg = await api.getEpg(channel.id, 1);
+          if (epg && epg.length > 0) {
+            setEpgData(prev => ({ ...prev, [channel.id]: epg[0] }));
+          }
+        } catch (error) {
+          console.error(`Error loading EPG for ${channel.id}:`, error);
+        }
+      });
+    };
+
     fetchContent();
   }, []);
 
@@ -180,9 +199,16 @@ export default function Dashboard() {
                 <div className="channel-header">
                   <span className="channel-name">{channel.title}</span>
                 </div>
-                <h3 className="program-title" style={{ color: '#71717a', fontSize: '0.9rem' }}>
-                  {channel.num ? `Canal ${channel.num}` : 'TV en Vivo'}
+                <h3 className="program-title" style={{ color: epgData[channel.id] ? '#fff' : '#71717a', fontSize: '0.9rem' }}>
+                  {epgData[channel.id]?.title 
+                    ? epgData[channel.id].title 
+                    : (channel.num ? `Canal ${channel.num}` : 'TV en Vivo')}
                 </h3>
+                {epgData[channel.id] && epgData[channel.id].start && epgData[channel.id].end && (
+                  <div style={{ fontSize: '0.75rem', color: '#71717a', marginTop: '0.25rem' }}>
+                    {new Date(epgData[channel.id].start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - {new Date(epgData[channel.id].end).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  </div>
+                )}
               </div>
             </div>
           ))}

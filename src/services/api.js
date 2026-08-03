@@ -107,6 +107,10 @@ export const api = {
     return api.request(`/movies/?limit=${limit}`, {}, true);
   },
   
+  getEpg: (streamId, limit = 5) => {
+    return api.request(`/live/${streamId}/epg?limit=${limit}`, {}, false); // Not caching EPG because it changes often
+  },
+  
   getStreamUrl: (type, id) => {
     const token = localStorage.getItem('token');
     return `${BASE_URL}/stream/${type}/${id}?token=${token}`;
