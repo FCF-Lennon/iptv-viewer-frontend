@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard';
+import Player from './pages/Player';
 
 function App() {
   return (
@@ -12,9 +14,11 @@ function App() {
         {/* Rutas protegidas */}
         <Route element={<Layout />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<div>Dashboard (WIP)</div>} />
-          <Route path="/player/:id" element={<div>Player (WIP)</div>} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
+        
+        {/* Reproductor (Sin Layout porque es pantalla completa) */}
+        <Route path="/player/:id" element={<Player />} />
       </Routes>
     </div>
   )
