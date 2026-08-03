@@ -1,11 +1,12 @@
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --bg-dark: #0f172a;
-  --bg-card: rgba(30, 41, 59, 0.7);
+  --primary: #1ee37d; /* Zapping Neon Green */
+  --primary-hover: #16c86a;
+  --bg-dark: #09090b; /* Very dark background */
+  --bg-card: rgba(24, 24, 27, 0.7); /* Darker glass card */
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: rgba(255, 255, 255, 0.1);
+  --text-muted: #a1a1aa;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --error: #ef4444;
 }
 
 * {
